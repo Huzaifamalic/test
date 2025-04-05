@@ -1,0 +1,63 @@
+.btn-1{
+    text-decoration: none;
+    background-color: #f2f2f2;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 15px;
+
+}
+.button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 20px;
+}
+.btn {
+    margin-top: 20px;
+    padding: 12px 18px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    font-size: 16px;
+    position: left;
+
+}
+.reset-btn {
+    background-color: #f2f2f2;
+    color: black;
+}
+.download-btn {
+    background-color: #f2f2f2;
+    color: black;
+}
+.csv-btn {
+    background-color: #f2f2f2;
+    color: black;
+}
+@media (max-width: 480px) {
+    .container {
+        padding: 30px;
+        max-width: 90%;
+    }
+    
+    .btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .input-group input {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+/* ✅ Tablets (Medium Devices) */
+@media (max-width: 768px) {
+    .container {
+        padding: 35px;
+        max-width: 80%;
+    }
+}
