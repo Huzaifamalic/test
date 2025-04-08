@@ -1,481 +1,149 @@
+
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Namaz & Survey Tracker</title>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <title>Login & Signup</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase Scripts (Optimized) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js" defer></script>
+
+   
     <style>
-        *{
-            text-align: right;
-
-        }
-        ul {
+        body {
             display: flex;
-            justify-content: flex-end;
-           
-                
-           
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            font-family: Arial, sans-serif;
         }
-        li{
-            background-color: #004886;
-            border-radius: top 10px;
-            
+        .container {
+            width: 350px;
+            padding: 50px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
-        li a {
-            color: white;
-            
-
+        .form-box h2 {
+            margin-bottom: 20px;
+            color: #333;
         }
-        li a:hover {
-           
-            color: white;
+        .input-group {
+            margin: 10px 0;
         }
-
-            .btn-1 {
-                display: flex;
-                justify-content: flex-end;
-                margin-top: 20px;
-            }
-            .btn-1 button {
-                background-color:#7dcd0d;
-                border-radius: 10px;
-                color: white;
-                
-            }
-
-
-           a {
-            color: pnk;
-           }
-      </style>
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #2575fc;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #6a11cb;
+        }
+        .toggle-text {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .toggle-text a {
+            color: #2575fc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
-<body class="p-4">
-
-    <!-- Tabs for Survey and Namaz Tracker -->
-    <!-- <ul class="nav nav-tabs " id="myTab" role="tablist">
-
-        <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="survey-tab" data-toggle="tab" href="#survey" role="tab" aria-controls="survey" aria-selected="true">سوالات</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="namaz-tab" data-toggle="tab" href="#namaz" role="tab" aria-controls="namaz" aria-selected="false">نماز ٹریکر</a>
-        </li>
-    </ul> -->
-    
-    <div class="nav-1">
-
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="survey-tab" data-toggle="tab" href="#survey" role="tab" aria-controls="survey" aria-selected="true">سوالات</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="namaz-tab" data-toggle="tab" href="#namaz" role="tab" aria-controls="namaz" aria-selected="false">نماز ٹریکر</a>
-            </li>
-        </ul>
-    </div>
-    
-    <div class="tab-content" id="myTabContent">
-        <!-- Survey Tab Content -->
-        <div class="tab-pane fade show active" id="survey" role="tabpanel" aria-labelledby="survey-tab">
-            <h3 class="mt-3 mb-4">اسلامی سوالات</h3>
-            <!-- <form id="survey-form">
-                <fieldset class="mb-3">
-                    <legend>آپ روزانہ نماز پڑھتے ہیں؟</legend>
-                    <label><input type="checkbox" name="pray" value="ہاں"> ہاں</label><br>
-                    <label><input type="checkbox" name="pray" value="نہیں"> نہیں</label><br>
-                    <textarea placeholder="وضاحت کریں..." class="form-control mt-2"></textarea>
-                </fieldset>
-
-                <fieldset class="mb-3">
-                    <legend>آپ کا پسندیدہ اسلامی موضوع؟</legend>
-                    <label><input type="checkbox" name="topic" value="نماز"> نماز</label><br>
-                    <label><input type="checkbox" name="topic" value="روزہ"> روزہ</label><br>
-                    <label><input type="checkbox" name="topic" value="زکوٰۃ"> زکوٰۃ</label><br>
-                    <textarea placeholder="دیگر موضوع لکھیں..." class="form-control mt-2"></textarea>
-                </fieldset>
-            </form> -->
-        
-            <form id="surveyForm" class="mt-3">
-                <!-- سوالات -->
-                <fieldset class="mb-3">
-                    <legend class="fw-bold">حفظ کی کیفیت </legend>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="آخری بیس سورتیں">
-                        <label class="form-check-label"> آخری بیس سورتیں  </label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="  اذکارمنسون">
-                        <label class="form-check-label"> اذکارمنسون </label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="ادعیہ ماثوره">
-                        <label class="form-check-label">ادعیہ ماثوره </label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="منتخب نصاب">
-                        <label class="form-check-label">منتخب نصاب </label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="باقی قرآن">
-                        <label class="form-check-label">باقی قرآن</label>
-                    </div>
-                </fieldset>
-    
-                <fieldset class="mb-3">
-                    <legend class="fw-bold">انفاق فی سبیل اللہ کی کیفیت کیا ہے ؟</legend>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ittefaq" value="ما بانه اتفاق جمع کر دیا ">
-                        <label class="form-check-label">ما بانه اتفاق جمع کر دیا ؟</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ittefaq" value="پہلے سے زیادہ">
-                        <label class="form-check-label"> پہلے سے زیادہ ؟</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ittefaq" value="5فیصد یا 5فیصد سے زیادہ">
-                        <label class="form-check-label">5فیصد یا 5فیصد سے زیادہ</label>
-                    </div>
-                </fieldset>
-    
-                <fieldset class="mb-3">
-                    <legend class="fw-bold">اذکار مسنون واد عیے ما ثوره</legend>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="routine" value="زندگی کا معمول بن گئے ہیں">
-                        <label class="form-check-label">زندگی کا معمول بن گئے ہیں </label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="routine" value="کوشش جاری ہے">
-                        <label class="form-check-label">کوشش جاری ہے</label>
-                    </div>
-                </fieldset>
-    
-                <fieldset class="mb-3">
-                    <legend class="fw-bold">اجتماعات میں شرکت</legend>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ijtima" value=" دوران ماہ کیا آپ نظام العمل میں طے شدہ (پشت پردرج ) یا نظم کی طرف سے بلائے مجھے کسی اجتماع یا مہم وغیرہ سے غیر حاضر رہے؟">
-                        <label class="form-check-label"> 
-                            دوران ماہ کیا آپ نظام العمل میں طے شدہ (پشت پردرج ) یا نظم کی 
-                            طرف سے بلائے گئے  کسی اجتماع یا مہم وغیرہ سے غیر حاضر رہے؟</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ijtima" value="اگر غیر حاضر رہے تو کیا غیر حاضری کے عذر سے آپ مطمئن تھے">
-                        <label class="form-check-label">اگر غیر حاضر رہے تو کیا غیر حاضری کے عذر سے آپ مطمئن تھے؟</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ijtima" value="کیا غیر حاضری کے لیے اعظم بالا سے پیشگی اجازت لی تھی ؟ ">
-                        <label class="form-check-label">کیا غیر حاضری کے لیے نظم بالا سے پیشگی اجازت لی تھی ؟</label>
-                    </div>
-                </fieldset>
-    
-    
-                <fieldset class="mb-3">
-                    <legend class="fw-bold">دوران ماہ مطالعہ اور سماعت کی کیفیت</legend>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="study" value="امیر محترم کا ہفتہ وار خطاب جمعہ سنا/ پڑھا  ہے؟">
-                        <label class="form-check-label">امیر محترم کا ہفتہ وار خطاب جمعہ سنا/ پڑھا  ہے؟</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="study" value="نداۓ خلافت زیر مطالعہ رہاہے؟">
-                        <label class="form-check-label">نداۓ خلافت زیر مطالعہ رہاہے؟</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="study" value="مثالی کا مطالعہ کیا ہے">
-                        <label class="form-check-label">میثاق کا مطالعہ کیا ہے؟</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="study" value="نصاب کے مطالعہ و سماعت میں پیش رفت یا بہتری ہوئی">
-                        <label class="form-check-label">نصاب کے مطالعہ/  سماعت میں پیش رفت یاددہرائ ہوئی؟</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="study" value="کیا کسی مجموعہ حدیث اور کتب سیرت زیر مطالعہ رہی">
-                        <label class="form-check-label">کیا کسی مجموعہ حدیث اور کتب سیرت زیر مطالعہ رہی؟</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="study" value="کیا دیگر دینی موضوعات زیر مطالعہ و سماعت رہے">
-                        <label class="form-check-label">کیا دیگر دینی موضوعات زیر مطالعہ/ و سماعت رہے؟</label>
-                    </div>
-                
-                </fieldset>
-    
-    
-                <fieldset class="mb-3">
-                    <legend class="fw-bold">مراقب (درج ذیل پہلوؤں سے اپنے ظاہر و باطن کا جائزہ لے رہے ہیں)</legend>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="self_assessment" value="اصلاح نیت، اخلاص، رضا سے الہی، آخرت کی نجات">
-                        <label class="form-check-label">اصلاح نیت، اخلاص، رضا ۓ الہی، آخرت کی نجات</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="self_assessment" value="باطنی بیماریوں کا علاج (نفاق، تکبر، غفلت، حسد، کینہ، بغض و  عداوت)">
-                        <label class="form-check-label">باطنی بیماریوں کا علاج (نفاق، تکبر، غفلت، حسد، کینہ، بغض و  عداوت)</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="self_assessment" value="عبادات میں فرض و واجبات کا اہتمام">
-                        <label class="form-check-label">عبادات میں فرض و واجبات کا اہتمام</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="self_assessment" value="معاملات و اخلاقیات (حقوق العباد)">
-                        <label class="form-check-label">معاملات و اخلاقیات (حقوق العباد)</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="self_assessment" value="معصیت میں حرام و مکروہات سے اجتناب">
-                        <label class="form-check-label">معیشت میں حرام و مکروہات سے اجتناب</label>
-                    </div>
-                
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="self_assessment" value="معاشرت میں اتباع سنت (شرعی پردہ، گفتگو، طہارت)، ناظر و بدعات سے اجتناب، معیار زندگی میں سادگی، قناعت">
-                        <label class="form-check-label">معاشرت میں اتباع سنت (شرعی پردہ، گفتگو، طہارت)، ناظر و بدعات سے اجتناب، معیار زندگی میں سادگی، قناعت</label>
-                    </div>
-                
-                </fieldset>
-                
-                <fieldset class="mb-3">
-                    <legend class="fw-bold mt-3">ذاتی انفرادی و دَعوتی کام (الاقرب فالا قرب / الدین النصیحہ)</legend>
-                
-                    <div class="mb-2">
-                        <label class="fw-bold">کیا کچھ احباب آپ کے زیر دعوت ہیں؟</label>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="inv" value="(جی ہاں) کیا کچھ احباب آپ کے زیر دعوت ہیں">
-                            <label class="form-check-label">جی ہاں</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="inv" value="(جی نہیں)کیا کچھ احباب آپ کے زیر دعوت ہیں">
-                            <label class="form-check-label">جی نہیں</label>
-                        </div>
-                    </div>
-                
-                    <div class="mb-2">
-                        <label class="fw-bold">ان کو دعوت میں پیش رفت ہو رہی ہے؟</label>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="progress" value="ان کو دعوت میں پیش رفت ہو رہی ہے؟جی ہاں ">
-                            <label class="form-check-label">جی ہاں</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="progress" value="ان کو دعوت میں پیش رفت ہو رہی ہے؟ جی نہیں  ">
-                            <label class="form-check-label">جی نہیں</label>
-                        </div>
-                    </div>
-                
-                    <div class="mb-2">
-                        <label class="fw-bold">زیر دعوت احباب میں اضافہ ہو رہا ہے؟</label>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="increase" value="  زیر دعوت احباب میں اضافہ ہو رہا ہے؟ جی ہاں">
-                            <label class="form-check-label">جی ہاں</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="increase" value=" زیر دعوت احباب میں اضافہ ہو رہا ہے؟ جی نہیں">
-                            <label class="form-check-label">جی نہیں</label>
-                        </div>
-                    </div>
-                
-                </fieldset>
-                
-                 <fieldset class="mb-3">
-                    <legend class="fw-bold mt-3">اگر کسی رفیق کے ساتھ قرض حسنہ/ کا روباری لین دین کیا ہے تو کیا ؟ </legend>
-                
-                    <div class="mb-2">
-                        <label class="fw-bold">تحریری شکل میں کیا ؟</label>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="invitation" value="اگر کسی رفیق کے ساتھ قرض حسنہ/ کا روباری لین دین کیا ہے تو کیا ؟ جی ہاں ">
-                            <label class="form-check-label">جی ہاں</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="invitation" value="اگر کسی رفیق کے ساتھ قرض حسنہ/ کا روباری لین دین کیا ہے تو کیا ؟ جی نہیں">
-                            <label class="form-check-label">جی نہیں</label>
-                        </div>
-                    </div>
-                
-                    <div class="mb-2">
-                        <label class="fw-bold">اس تحریر پر دو گواہ ٹھراۓ  ؟ </label>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="pro" value=" اس تحریر پر دو گواہ ٹھراۓ ؟ جی ہاں">
-                            <label class="form-check-label">جی ہاں</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="pro" value=" اس تحریر پر دو گواہ پھبر ائے ؟ جی نہیں">
-                            <label class="form-check-label">جی نہیں</label>
-                        </div>
-                    </div>
-                
-                    <div class="mb-2">
-                        <label class="fw-bold">یہ گواہ نظم بالا میں سے ہیں ؟ </label>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="inc" value=" یہ گواہ نظم بالا میں سے ہیں ؟ جی ہاں">
-                            <label class="form-check-label">جی ہاں</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="inc" value="یہ گواہ نظم بالا میں سے ہیں ؟ جی نہیں">
-                            <label class="form-check-label">جی نہیں</label>
-                        </div>
-                    </div>
-                
-                </fieldset>
-                
-                <fieldset class="mb-3">
-                    <legend class="fw-bold">اضافی رائے یا مشورہ</legend>
-                    <textarea class="form-control" name="feedback" rows="4" placeholder="اپنی رائے لکھیں..."></textarea>
-                </fieldset>
+<body>
+    <div class="container">
+        <div class="form-box">
+            <h2 id="form-title">Login</h2>
+            <form id="auth-form">
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <p class="toggle-text">Create account? Sign Up <a href="#" id="toggle-form">Sign Up</a></p>
             </form>
         </div>
-
-        <!-- Namaz Tracker Tab Content -->
-        <div class="tab-pane fade" id="namaz" role="tabpanel" aria-labelledby="namaz-tab">
-            <h3 class="mt-3 mb-3">نماز ٹریکر <span id="month-year"></span></h3>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>تاریخ</th>
-                        <th>فجر</th>
-                        <th>ظہر</th>
-                        <th>عصر</th>
-                        <th>مغرب</th>
-                        <th>عشاء</th>
-                    </tr>
-                </thead>
-                <tbody id="namaz-table"></tbody>
-            </table>
-        </div>
     </div>
-
-    <!-- Download CSV Button -->
-     <div class="btn-1">
-
-         <button onclick="downloadAllCSV()" class="btn  mt-4">📥 مکمل CSV ڈاؤن لوڈ کریں</button>
-        </div>
-
-    <!-- JavaScript -->
-    <script>
-        let today = new Date();
-        let currentMonth = today.getMonth();
-        let currentYear = today.getFullYear();
-        let monthNames = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
-
-        document.addEventListener("DOMContentLoaded", function () {
-            let monthYearElement = document.getElementById("month-year");
-            if (monthYearElement) {
-                monthYearElement.innerText = `${monthNames[currentMonth]} ${currentYear}`;
-            }
-
-            let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            let tableBody = document.getElementById("namaz-table");
-
-            function loadTracker() {
-                let savedData = JSON.parse(localStorage.getItem("namazTracker")) || {};
-                tableBody.innerHTML = "";
-                for (let i = 1; i <= daysInMonth; i++) {
-                    let formattedDate = `${String(i).padStart(2, '0')}-${String(currentMonth + 1).padStart(2, '0')}-${currentYear}`;
-                    let row = `<tr>
-                        <td><strong>${formattedDate}</strong></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Fajr" ${savedData[formattedDate]?.Fajr ? "checked" : ""}></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Dhuhr" ${savedData[formattedDate]?.Dhuhr ? "checked" : ""}></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Asr" ${savedData[formattedDate]?.Asr ? "checked" : ""}></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Maghrib" ${savedData[formattedDate]?.Maghrib ? "checked" : ""}></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Isha" ${savedData[formattedDate]?.Isha ? "checked" : ""}></td>
-                    </tr>`;
-                    tableBody.innerHTML += row;
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+    apiKey: "AIzaSyCYRmfnq_JnrcdxhP4xrWMu5mMdb6fQjAo",
+    authDomain: "islam-app-6bb2e.firebaseapp.com",
+    projectId: "islam-app-6bb2e",
+    storageBucket: "islam-app-6bb2e.firebasestorage.app",
+    messagingSenderId: "74748834935",
+    appId: "1:74748834935:web:0bd586c92ad0fa6c540272",
+    measurementId: "G-L7ZDP3NWBE"
+  };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleForm = document.getElementById('toggle-form');
+            const formTitle = document.getElementById('form-title');
+            const submitButton = document.querySelector('.btn');
+            const authForm = document.getElementById('auth-form');
+            
+            toggleForm.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (formTitle.innerText === "Login") {
+                    formTitle.innerText = "Sign Up";
+                    submitButton.innerText = "Sign Up";
+                    toggleForm.innerText = "Already have an account? Login";
+                } else {
+                    formTitle.innerText = "Login";
+                    submitButton.innerText = "Login";
+                    toggleForm.innerText = "Create account? Sign Up";
                 }
+            });
 
-                document.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
-                    checkbox.addEventListener("change", saveTracker);
-                });
-            }
-
-            function saveTracker() {
-                let trackerData = {};
-                document.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
-                    let date = checkbox.getAttribute("data-date");
-                    let namaz = checkbox.getAttribute("data-namaz");
-                    if (!trackerData[date]) {
-                        trackerData[date] = {};
-                    }
-                    trackerData[date][namaz] = checkbox.checked;
-                });
-                localStorage.setItem("namazTracker", JSON.stringify(trackerData));
-            }
-
-            loadTracker();
+            authForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                if (formTitle.innerText === "Sign Up") {
+                    createUserWithEmailAndPassword(auth, email, password)
+                        .then(() => {
+                            alert("Sign Up successful! Please login.");
+                            formTitle.innerText = "Login";
+                            submitButton.innerText = "Login";
+                            toggleForm.innerText = "Don't have an account? Sign Up";
+                        })
+                        .catch(error => alert(error.message));
+                } else {
+                    signInWithEmailAndPassword(auth, email, password)
+                        .then(() => {
+                            alert("Login successful! well come to attendance page.");
+                            window.location.href = "./attendance.html";
+                        })
+                        .catch(error => alert(error.message));
+                }
+            });
         });
-
-        function getFormData() {
-            let data = [
-                ["سوال", "جواب"]
-            ];
-
-            document.querySelectorAll("fieldset").forEach(fieldset => {
-                let question = fieldset.querySelector("legend").innerText;
-                let answers = [];
-                fieldset.querySelectorAll("input:checked").forEach(input => {
-                    answers.push(input.value);
-                });
-                let textarea = fieldset.querySelector("textarea");
-                if (textarea && textarea.value) {
-                    answers.push(textarea.value);
-                }
-                data.push([question, answers.join(" / ")]);
-            });
-
-            return data;
-        }
-
-        function getNamazTableData() {
-            let data = [
-                ["تاریخ", "فجر", "ظہر", "عصر", "مغرب", "عشاء"]
-            ];
-            const rows = document.querySelectorAll("#namaz-table tr");
-            rows.forEach(row => {
-                const cols = row.querySelectorAll("td");
-                if (cols.length) {
-                    let rowData = [cols[0].innerText];
-                    for (let i = 1; i < cols.length; i++) {
-                        rowData.push(cols[i].querySelector("input").checked ? "✔️" : "❌");
-                    }
-                    data.push(rowData);
-                }
-            });
-            return data;
-        }
-
-        function downloadAllCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-
-            // Survey data
-            let formData = getFormData();
-            formData.forEach(row => {
-                csvContent += row.join(",") + "\n";
-            });
-
-            csvContent += "\n";
-
-            // Namaz table data
-            let namazData = getNamazTableData();
-            namazData.forEach(row => {
-                csvContent += row.join(",") + "\n";
-            });
-
-            let encodedUri = encodeURI(csvContent);
-            let link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "complete_record.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
     </script>
-
-    <!-- Required Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
