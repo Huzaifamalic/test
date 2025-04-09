@@ -6,7 +6,8 @@
     <title>Namaz & Survey Tracker</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <style>
         *{
             text-align: right;
 
@@ -87,7 +88,257 @@
            a {
             color: pnk;
            }
-      </style>
+      </style> -->
+      <style>
+        /* Global Styling */
+        * {
+
+            gap: 10px;
+            font-family: 'Noto Nastaliq Urdu', 'Arial', sans-serif; /* Urdu font */
+            text-align: right;
+            direction: rtl; /* Right-to-left for Urdu */
+        }
+    
+        body {
+            background-color: #f0f4f8;
+            padding: 20px;
+            color: #2c3e50;
+        }
+    
+        /* Navbar Styling */
+        .nav-tabs {
+            /* background: linear-gradient(135deg, #004886, #003366); Gradient background */
+            background-color: #005392;
+            padding: 10px 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+    
+        .nav-item {
+            margin-left: 10px;
+        }
+        input {
+            margin-left: 12px;
+        }
+    
+        .nav-link {
+            color: #fff;
+            background-color: transparent;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+    
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+    
+        .nav-link.active {
+            background-color: #7dcd0d; /* Green for active tab */
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+    
+        .nav-link i {
+            margin-left: 8px; /* Space between icon and text */
+        }
+        .nav-1 li a {
+            text-align: right;
+            
+        }
+    
+        /* Tab Content */
+        .tab-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+    
+        /* Headings */
+        h3 {
+            color: #004886;
+            font-weight: 700;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #7dcd0d;
+            margin-bottom: 25px;
+        }
+    
+        #month-year {
+            color: #e74c3c;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+    
+        /* Form Styling */
+        fieldset {
+            background-color: #f9fbfc;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e6ed;
+            margin-bottom: 25px;
+            
+        }
+    
+        legend {
+            color: #004886;
+            font-size: 1.25rem;
+            font-weight: 600;
+            background-color: #fff;
+            padding: 5px 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        
+        }
+    
+        .form-check {
+            margin-bottom: 12px;
+            padding: 10px;
+        }
+    
+        .form-check-label {
+            color: #34495e;
+            margin-right: 20px;
+            font-size: 1rem;
+            
+        }
+    
+        .form-check-input {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    
+        .form-check-inline .form-check-input {
+            margin-left: 5px;
+        }
+    
+        textarea.form-control {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            resize: vertical;
+            padding: 10px;
+        }
+    
+        /* Namaz Tracker Table */
+        .table.table-bordered {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+    
+        .table thead th {
+            background-color: #004886;
+            color: #fff;
+            font-weight: 600;
+            text-align: center;
+            padding: 12px;
+            border: none;
+        }
+    
+        .table tbody td {
+            text-align: center;
+            padding: 10px;
+            color: #34495e;
+            border: 1px solid #e0e6ed;
+            transition: background-color 0.3s ease;
+        }
+    
+        .table tbody tr:hover {
+            background-color: #f2f6fa;
+        }
+    
+        .table tbody tr:nth-child(even) {
+            background-color: #f9fbfc;
+        }
+    
+        .table input[type="checkbox"] {
+            cursor: pointer;
+        }
+    
+        /* Button Styling */
+        .btn-1 {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    
+        .btn-1 button {
+            background-color: #7dcd0d;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            padding: 12px 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+    
+        .btn-1 button:hover {
+            background-color: #6ab80b;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    
+        .btn-1 button i {
+            margin-left: 8px;
+        }
+    
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+                align-items: flex-end;
+                padding: 10px;
+            }
+    
+            .nav-item {
+                margin-left: 0;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+    
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 1rem;
+            }
+    
+            .tab-content {
+                padding: 15px;
+            }
+    
+            .btn-1 button {
+                width: 100%;
+                padding: 12px;
+            }
+    
+            .table thead th, .table tbody td {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+        }
+    
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        .tab-pane {
+            animation: fadeIn 0.5s ease-in;
+        }
+    </style>
 </head>
 <body class="p-4">
 
@@ -391,7 +642,7 @@
      <div class="btn-1">
 
          <button onclick="downloadAllCSV()" class="btn  mt-4">📥 مکمل CSV ڈاؤن لوڈ کریں</button>
-         <button class="btn reset-btn log-btn" id="logout-btn">🚪 لاگ آؤٹ کریں </button>
+         <button class="btn btn mt-4" id="logout-btn">🚪 لاگ آؤٹ کریں </button>
         </div>
 
     <!-- JavaScript -->
@@ -517,6 +768,7 @@
     <!-- Required Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    
    
 </body>
 </html>

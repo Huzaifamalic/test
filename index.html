@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,31 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login & Signup</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Firebase Scripts (Optimized) -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js" defer></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js" defer></script>
-
-   
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js" defer></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
+            background: linear-gradient(to right, #4a00e0, #00d4ff);
             font-family: Arial, sans-serif;
         }
         .container {
             width: 350px;
             padding: 50px;
-            background: #fff;
+            background: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
         .form-box h2 {
             margin-bottom: 20px;
-            color: #333;
+            color: #2c3e50;
         }
         .input-group {
             margin: 10px 0;
@@ -38,30 +38,39 @@
         .input-group input {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #dfe6e9;
             border-radius: 5px;
+            background: #f8f9fa;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #8e2de2;
         }
         .btn {
             width: 100%;
             padding: 10px;
-            background: #2575fc;
-            color: #fff;
+            background: #8e2de2;
+            color: #ffffff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
         }
         .btn:hover {
-            background: #6a11cb;
+            background: #00d4ff;
         }
         .toggle-text {
             margin-top: 10px;
             font-size: 14px;
+            color: #636e72;
         }
         .toggle-text a {
-            color: #2575fc;
+            color: #8e2de2;
             text-decoration: none;
             font-weight: bold;
+        }
+        .toggle-text a:hover {
+            color: #00d4ff;
         }
     </style>
 </head>
@@ -88,14 +97,14 @@
         
         // Firebase configuration
         const firebaseConfig = {
-    apiKey: "AIzaSyCYRmfnq_JnrcdxhP4xrWMu5mMdb6fQjAo",
-    authDomain: "islam-app-6bb2e.firebaseapp.com",
-    projectId: "islam-app-6bb2e",
-    storageBucket: "islam-app-6bb2e.firebasestorage.app",
-    messagingSenderId: "74748834935",
-    appId: "1:74748834935:web:0bd586c92ad0fa6c540272",
-    measurementId: "G-L7ZDP3NWBE"
-  };
+            apiKey: "AIzaSyCYRmfnq_JnrcdxhP4xrWMu5mMdb6fQjAo",
+            authDomain: "islam-app-6bb2e.firebaseapp.com",
+            projectId: "islam-app-6bb2e",
+            storageBucket: "islam-app-6bb2e.firebasestorage.app",
+            messagingSenderId: "74748834935",
+            appId: "1:74748834935:web:0bd586c92ad0fa6c540272",
+            measurementId: "G-L7ZDP3NWBE"
+        };
         
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -128,19 +137,47 @@
                 if (formTitle.innerText === "Sign Up") {
                     createUserWithEmailAndPassword(auth, email, password)
                         .then(() => {
-                            alert("Sign Up successful! Please login.");
-                            formTitle.innerText = "Login";
-                            submitButton.innerText = "Login";
-                            toggleForm.innerText = "Don't have an account? Sign Up";
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Sign Up successful! Please login.',
+                                confirmButtonColor: '#8e2de2',
+                            }).then(() => {
+                                formTitle.innerText = "Login";
+                                submitButton.innerText = "Login";
+                                toggleForm.innerText = "Don't have an account? Sign Up";
+                            });
                         })
-                        .catch(error => alert(error.message));
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: error.message,
+                                confirmButtonColor: '#8e2de2',
+                            });
+                        });
                 } else {
                     signInWithEmailAndPassword(auth, email, password)
                         .then(() => {
-                            alert("Login successful! well come to attendance page.");
-                            window.location.href = "./attendance.html";
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Welcome!',
+                                text: 'Login successful! Redirecting to attendance page...',
+                                confirmButtonColor: '#8e2de2',
+                                timer: 1500,
+                                timerProgressBar: true,
+                            }).then(() => {
+                                window.location.href = "./attendance.html";
+                            });
                         })
-                        .catch(error => alert(error.message));
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: error.message,
+                                confirmButtonColor: '#8e2de2',
+                            });
+                        });
                 }
             });
         });
