@@ -76,27 +76,40 @@ onAuthStateChanged(auth, (user) => {
 
 let logoutBtn = document.getElementById('logout-btn');
 logoutBtn.addEventListener('click', function () {
-    signOut(auth)
-        .then(() => {
-            Swal.fire({
-                icon: 'success',
-                title: 'لاگ آؤٹ کامیاب!',
-                text: 'آپ کامیابی سے لاگ آؤٹ ہو چکے ہیں!',
-                confirmButtonColor: '#8e2de2',
-                timer: 1500,
-                timerProgressBar: true,
-            }).then(() => {
-                // Redirect to login page or home page
-                window.location.href = "index.html";
-            });
-        })
-        .catch((error) => {
-            Swal.fire({
-                icon: 'error',
-                title: 'لاگ آؤٹ ناکام',
-                text: 'لاگ آؤٹ میں مسئلہ: ' + error.message,
-                confirmButtonColor: '#8e2de2',
-            });
-            console.error('لاگ آؤٹ میں مسئلہ:', error);
-        });
+    Swal.fire({
+        title: 'کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟',
+        text: 'آپ کامیابی سے لاگ آؤٹ ہو جائیں گے',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#7dcd0d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'ہاں، لاگ آؤٹ کریں',
+        cancelButtonText: 'نہیں',
+        reverseButtons: true // This puts "Yes" button on the right (RTL friendly)
+    }).then((result) => {
+        if (result.isConfirmed) {
+            signOut(auth)
+                .then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'لاگ آؤٹ کامیاب!',
+                        text: 'آپ کامیابی سے لاگ آؤٹ ہو چکے ہیں!',
+                        confirmButtonColor: '#7dcd0d',
+                        timer: 1500,
+                        timerProgressBar: true,
+                    }).then(() => {
+                        window.location.href = "index.html";
+                    });
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'لاگ آؤٹ ناکام',
+                        text: 'لاگ آؤٹ میں مسئلہ: ' + error.message,
+                        confirmButtonColor: '#7dcd0d',
+                    });
+                    console.error('لاگ آؤٹ میں مسئلہ:', error);
+                });
+        }
+    });
 });
