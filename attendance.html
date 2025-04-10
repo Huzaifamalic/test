@@ -7,6 +7,9 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
     <!-- <style>
         *{
             text-align: right;
@@ -294,7 +297,18 @@
         .btn-1 button i {
             margin-left: 8px;
         }
-    
+        .img {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .img img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .nav-tabs {
@@ -341,6 +355,10 @@
     </style>
 </head>
 <body class="p-4">
+    <div class="img">
+        <img src="./aset/logo.jpg" alt="" im>
+
+    </div>
 
     <!-- Tabs for Survey and Namaz Tracker -->
     <!-- <ul class="nav nav-tabs " id="myTab" role="tablist">
@@ -391,23 +409,23 @@
                 <fieldset class="mb-3">
                     <legend class="fw-bold">حفظ کی کیفیت </legend>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="آخری بیس سورتیں">
+                        <input type="checkbox" class="form-check-input" name="hifz" value="آخری بیس سورتیں">
                         <label class="form-check-label"> آخری بیس سورتیں  </label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="  اذکارمنسون">
+                        <input type="checkbox" class="form-check-input" name="hifz" value="  اذکارمنسون">
                         <label class="form-check-label"> اذکارمنسون </label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="ادعیہ ماثوره">
+                        <input type="checkbox" class="form-check-input" name="hifz" value="ادعیہ ماثوره">
                         <label class="form-check-label">ادعیہ ماثوره </label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="منتخب نصاب">
+                        <input type="checkbox" class="form-check-input" name="hifz" value="منتخب نصاب">
                         <label class="form-check-label">منتخب نصاب </label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="hifz" value="باقی قرآن">
+                        <input type="checkbox" class="form-check-input" name="hifz" value="باقی قرآن">
                         <label class="form-check-label">باقی قرآن</label>
                     </div>
                 </fieldset>
@@ -415,15 +433,15 @@
                 <fieldset class="mb-3">
                     <legend class="fw-bold">انفاق فی سبیل اللہ کی کیفیت کیا ہے ؟</legend>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ittefaq" value="ما بانه اتفاق جمع کر دیا ">
+                        <input type="checkbox" class="form-check-input" name="ittefaq" value="ما بانه اتفاق جمع کر دیا ">
                         <label class="form-check-label">ما بانه اتفاق جمع کر دیا ؟</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ittefaq" value="پہلے سے زیادہ">
+                        <input type="checkbox" class="form-check-input" name="ittefaq" value="پہلے سے زیادہ">
                         <label class="form-check-label"> پہلے سے زیادہ ؟</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ittefaq" value="5فیصد یا 5فیصد سے زیادہ">
+                        <input type="checkbox" class="form-check-input" name="ittefaq" value="5فیصد یا 5فیصد سے زیادہ">
                         <label class="form-check-label">5فیصد یا 5فیصد سے زیادہ</label>
                     </div>
                 </fieldset>
@@ -431,11 +449,11 @@
                 <fieldset class="mb-3">
                     <legend class="fw-bold">اذکار مسنون واد عیے ما ثوره</legend>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="routine" value="زندگی کا معمول بن گئے ہیں">
+                        <input type="checkbox" class="form-check-input" name="routine" value="زندگی کا معمول بن گئے ہیں">
                         <label class="form-check-label">زندگی کا معمول بن گئے ہیں </label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="routine" value="کوشش جاری ہے">
+                        <input type="checkbox" class="form-check-input" name="routine" value="کوشش جاری ہے">
                         <label class="form-check-label">کوشش جاری ہے</label>
                     </div>
                 </fieldset>
@@ -443,17 +461,17 @@
                 <fieldset class="mb-3">
                     <legend class="fw-bold">اجتماعات میں شرکت</legend>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ijtima" value=" دوران ماہ کیا آپ نظام العمل میں طے شدہ (پشت پردرج ) یا نظم کی طرف سے بلائے مجھے کسی اجتماع یا مہم وغیرہ سے غیر حاضر رہے؟">
+                        <input type="checkbox" class="form-check-input" name="ijtima" value=" دوران ماہ کیا آپ نظام العمل میں طے شدہ (پشت پردرج ) یا نظم کی طرف سے بلائے مجھے کسی اجتماع یا مہم وغیرہ سے غیر حاضر رہے؟">
                         <label class="form-check-label"> 
                             دوران ماہ کیا آپ نظام العمل میں طے شدہ (پشت پردرج ) یا نظم کی 
                             طرف سے بلائے گئے  کسی اجتماع یا مہم وغیرہ سے غیر حاضر رہے؟</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ijtima" value="اگر غیر حاضر رہے تو کیا غیر حاضری کے عذر سے آپ مطمئن تھے">
+                        <input type="checkbox" class="form-check-input" name="ijtima" value="اگر غیر حاضر رہے تو کیا غیر حاضری کے عذر سے آپ مطمئن تھے">
                         <label class="form-check-label">اگر غیر حاضر رہے تو کیا غیر حاضری کے عذر سے آپ مطمئن تھے؟</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ijtima" value="کیا غیر حاضری کے لیے اعظم بالا سے پیشگی اجازت لی تھی ؟ ">
+                        <input type="checkbox" class="form-check-input" name="ijtima" value="کیا غیر حاضری کے لیے اعظم بالا سے پیشگی اجازت لی تھی ؟ ">
                         <label class="form-check-label">کیا غیر حاضری کے لیے نظم بالا سے پیشگی اجازت لی تھی ؟</label>
                     </div>
                 </fieldset>
@@ -641,8 +659,10 @@
     <!-- Download CSV Button -->
      <div class="btn-1">
 
-         <button onclick="downloadAllCSV()" class="btn  mt-4">📥 مکمل CSV ڈاؤن لوڈ کریں</button>
+         <!-- <button onclick="downloadAllCSV()" class="btn  mt-4">📥 مکمل CSV ڈاؤن لوڈ کریں</button> -->
+
          <button class="btn btn mt-4" id="logout-btn">🚪 لاگ آؤٹ کریں </button>
+         <button onclick="captureScreenshot()" class="btn mt-4">📸 سکرین شاٹ ڈاؤن لوڈ کریں</button>
         </div>
 
     <!-- JavaScript -->
@@ -719,6 +739,26 @@
             return data;
         }
 
+        document.addEventListener("DOMContentLoaded", function () {
+        const savedData = JSON.parse(localStorage.getItem("surveyData") || "{}");
+
+        Object.keys(savedData).forEach((key) => {
+            const values = savedData[key];
+
+            values.forEach((value) => {
+                // For checkboxes/radios
+                const input = document.querySelector(`input[name="${key}"][value="${value}"]`);
+                if (input) input.checked = true;
+
+                // For textarea
+                const textarea = document.querySelector(`textarea[name="${key}"]`);
+                if (textarea) textarea.value = value;
+            });
+        });
+    });
+
+
+
         function getNamazTableData() {
             let data = [
                 ["تاریخ", "فجر", "ظہر", "عصر", "مغرب", "عشاء"]
@@ -737,32 +777,57 @@
             return data;
         }
 
-        function downloadAllCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+        // function downloadAllCSV() {
+        //     let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
 
-            // Survey data
-            let formData = getFormData();
-            formData.forEach(row => {
-                csvContent += row.join(",") + "\n";
-            });
+            
+        //     let formData = getFormData();
+        //     formData.forEach(row => {
+        //         csvContent += row.join(",") + "\n";
+        //     });
 
-            csvContent += "\n";
+        //     csvContent += "\n";
 
-            // Namaz table data
-            let namazData = getNamazTableData();
-            namazData.forEach(row => {
-                csvContent += row.join(",") + "\n";
-            });
+           
+        //     let namazData = getNamazTableData();
+        //     namazData.forEach(row => {
+        //         csvContent += row.join(",") + "\n";
+        //     });
 
-            let encodedUri = encodeURI(csvContent);
-            let link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "complete_record.csv");
-            document.body.appendChild(link);
+        //     let encodedUri = encodeURI(csvContent);
+        //     let link = document.createElement("a");
+        //     link.setAttribute("href", encodedUri);
+        //     link.setAttribute("download", "complete_record.csv");
+        //     document.body.appendChild(link);
+        //     link.click();
+        //     document.body.removeChild(link);
+        // }
+
+        function captureScreenshot() {
+    let activeTab = document.querySelector('.tab-pane.active');
+    domtoimage.toPng(activeTab, { quality: 1, bgcolor: '#fff' })
+        .then(function (dataUrl) {
+            let link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = 'tracker_screenshot.png';
             link.click();
-            document.body.removeChild(link);
-        }
-        
+            Swal.fire({
+                icon: 'success',
+                title: 'کامیاب',
+                text: 'سکرین شاٹ کامیابی سے ڈاؤن لوڈ ہو گیا!',
+                timer: 1500
+            });
+        })
+        .catch(function (error) {
+            console.error('Screenshot lene mein error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'خطا',
+                text: 'سکرین شاٹ لینے میں مسئلہ ہوا۔',
+            });
+        });
+}
+    
     </script>
 <script type="module" src="./attendance.js"></script>
     <!-- Required Scripts -->
