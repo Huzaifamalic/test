@@ -7,12 +7,47 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/src/dom-to-image.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- html2canvas -->
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
+<!-- canvas2image -->
+<script src="https://cdn.jsdelivr.net/npm/canvas2image/canvas2image.min.js"></script>
+   
 
     
      <style>
+      /* Ensure Namaz table renders sharply */
+#namaz {
+    overflow: visible !important; /* Prevent clipping */
+    transform: none !important; /* Remove any scaling */
+    filter: none !important; /* Remove any blur */
+    -webkit-font-smoothing: antialiased; /* Improve text rendering */
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#namaz table {
+    font-size: 16px; /* Ensure readable text */
+    border-collapse: collapse; /* Clean borders */
+    width: 100%; /* Full width */
+}
+
+#namaz th, #namaz td {
+    border: 1px solid #000 !important; /* Clear borders */
+    padding: 10px; /* Adequate spacing */
+    font-weight: normal; /* Prevent bold text from blurring */
+    text-align: center; /* Consistent alignment */
+}
+
+#namaz input[type="checkbox"] {
+    transform: scale(1); /* Prevent checkbox scaling issues */
+}
+
+/* Ensure no blur on parent elements */
+.tab-content, .tab-pane {
+    filter: none !important;
+    transform: none !important;
+}
         /* Global Styling */
         * {
 
@@ -226,6 +261,20 @@
             height: auto;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+      /* Table aur text ko sharp banane ke liye */
+      .table th, .table td {
+            font-size: 18px; /* Bada font size */
+            padding: 10px; /* Padding badhao */
+            border: 1px solid #000; /* Clear borders */
+        }
+        .tab-pane {
+            overflow: visible !important;
+            min-height: 200px; /* Ensure content visible */
+        }
+        h3 {
+            font-size: 24px; /* Heading bada karo */
         }
 
         
@@ -530,11 +579,15 @@
                     <legend class="fw-bold">اضافی رائے یا مشورہ</legend>
                     <textarea class="form-control" name="feedback" rows="4" placeholder="اپنی رائے لکھیں..."></textarea>
                 </fieldset>
+               
             </form>
+            <div  class="btn-1">
+                <button id="captureForm">فام کا اسکرین شاٹ لیں</button> </div>
         </div>
 
         <!-- Namaz Tracker Tab Content -->
         <div class="tab-pane fade" id="namaz" role="tabpanel" aria-labelledby="namaz-tab">
+            <div id="screenshot">
             <h3 class="mt-3 mb-3">نماز ٹریکر <span id="month-year"></span></h3>
             <table class="table table-bordered">
                 <thead>
@@ -550,458 +603,23 @@
                 <tbody id="namaz-table"></tbody>
             </table>
         </div>
+            <div class="btn-1">
+                <button id="captureTracker">ٹریکر کا اسکرین شاٹ لیں</button> </div>
+        </div>
     </div>
 
     <!-- Download CSV Button -->
      <div class="btn-1">
 
-         <!-- <button onclick="downloadAllCSV()" class="btn  mt-4">📥 مکمل CSV ڈاؤن لوڈ کریں</button> -->
+         
 
          <button class="btn btn mt-4" id="logout-btn">🚪 لاگ آؤٹ کریں </button>
-         <button onclick="captureScreenshot()" class="btn mt-4">📸 سکرین شاٹ ڈاؤن لوڈ کریں</button>
-        </div>
+          </div>
 
     <!-- JavaScript -->
-    <!-- <script>
-        
-        let today = new Date();
-        let currentMonth = today.getMonth();
-        let currentYear = today.getFullYear();
-        let monthNames = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
-
-        document.addEventListener("DOMContentLoaded", function () {
-            let monthYearElement = document.getElementById("month-year");
-            if (monthYearElement) {
-                monthYearElement.innerText = `${monthNames[currentMonth]} ${currentYear}`;
-            }
-
-            let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            let tableBody = document.getElementById("namaz-table");
-
-            function loadTracker() {
-                let savedData = JSON.parse(localStorage.getItem("namazTracker")) || {};
-                tableBody.innerHTML = "";
-                for (let i = 1; i <= daysInMonth; i++) {
-                    let formattedDate = `${String(i).padStart(2, '0')}-${String(currentMonth + 1).padStart(2, '0')}-${currentYear}`;
-                    let row = `<tr>
-                        <td><strong>${formattedDate}</strong></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Fajr" ${savedData[formattedDate]?.Fajr ? "checked" : ""}></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Dhuhr" ${savedData[formattedDate]?.Dhuhr ? "checked" : ""}></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Asr" ${savedData[formattedDate]?.Asr ? "checked" : ""}></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Maghrib" ${savedData[formattedDate]?.Maghrib ? "checked" : ""}></td>
-                        <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Isha" ${savedData[formattedDate]?.Isha ? "checked" : ""}></td>
-                    </tr>`;
-                    tableBody.innerHTML += row;
-                }
-
-                document.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
-                    checkbox.addEventListener("change", saveTracker);
-                });
-            }
-
-            function saveTracker() {
-                let trackerData = {};
-                document.querySelectorAll("input[type='checkbox']").forEach(checkbox => {
-                    let date = checkbox.getAttribute("data-date");
-                    let namaz = checkbox.getAttribute("data-namaz");
-                    if (!trackerData[date]) {
-                        trackerData[date] = {};
-                    }
-                    trackerData[date][namaz] = checkbox.checked;
-                });
-                localStorage.setItem("namazTracker", JSON.stringify(trackerData));
-            }
-
-            loadTracker();
-        });
-
-        function getFormData() {
-            let data = [
-                ["سوال", "جواب"]
-            ];
-
-            document.querySelectorAll("fieldset").forEach(fieldset => {
-                let question = fieldset.querySelector("legend").innerText;
-                let answers = [];
-                fieldset.querySelectorAll("input:checked").forEach(input => {
-                    answers.push(input.value);
-                });
-                let textarea = fieldset.querySelector("textarea");
-                if (textarea && textarea.value) {
-                    answers.push(textarea.value);
-                }
-                data.push([question, answers.join(" / ")]);
-            });
-
-            return data;
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-        const savedData = JSON.parse(localStorage.getItem("surveyData") || "{}");
-
-        Object.keys(savedData).forEach((key) => {
-            const values = savedData[key];
-
-            values.forEach((value) => {
-                // For checkboxes/radios
-                const input = document.querySelector(`input[name="${key}"][value="${value}"]`);
-                if (input) input.checked = true;
-
-                // For textarea
-                const textarea = document.querySelector(`textarea[name="${key}"]`);
-                if (textarea) textarea.value = value;
-            });
-        });
-    });
+   
 
 
-
-        function getNamazTableData() {
-            let data = [
-                ["تاریخ", "فجر", "ظہر", "عصر", "مغرب", "عشاء"]
-            ];
-            const rows = document.querySelectorAll("#namaz-table tr");
-            rows.forEach(row => {
-                const cols = row.querySelectorAll("td");
-                if (cols.length) {
-                    let rowData = [cols[0].innerText];
-                    for (let i = 1; i < cols.length; i++) {
-                        rowData.push(cols[i].querySelector("input").checked ? "✔️" : "❌");
-                    }
-                    data.push(rowData);
-                }
-            });
-            return data;
-        }
-
-       
-
-//         function captureScreenshot() {
-//     let activeTab = document.querySelector('.tab-pane.active');
-//     domtoimage.toPng(activeTab, { quality: 1, bgcolor: '#fff' })
-//         .then(function (dataUrl) {
-//             let link = document.createElement('a');
-//             link.href = dataUrl;
-//             link.download = 'tracker_screenshot.png';
-//             link.click();
-//             Swal.fire({
-//                 icon: 'success',
-//                 title: 'کامیاب',
-//                 text: 'سکرین شاٹ کامیابی سے ڈاؤن لوڈ ہو گیا!',
-//                 timer: 1500
-//             });
-//         })
-//         .catch(function (error) {
-//             console.error('Screenshot lene mein error:', error);
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'خطا',
-//                 text: 'سکرین شاٹ لینے میں مسئلہ ہوا۔',
-//             });
-//         });
-// }
-    
-// 
-
-function captureScreenshot() {
-    html2canvas(document.body).then(canvas => {
-        let image = canvas.toDataURL("image/png");
-
-        // Local storage mein save karen
-        localStorage.setItem("screenshot", image);
-
-        // Download karen
-        let link = document.createElement("a");
-        link.href = image;
-        link.download = "screenshot.png";
-        link.click();
-    });
-}
-
-
-</script> -->
-
-<!-- <script>
-    let today = new Date();
-    let currentMonth = today.getMonth();
-    let currentYear = today.getFullYear();
-    let monthNames = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
-
-    document.addEventListener("DOMContentLoaded", function () {
-        let monthYearElement = document.getElementById("month-year");
-        if (monthYearElement) {
-            monthYearElement.innerText = `${monthNames[currentMonth]} ${currentYear}`;
-        }
-
-        // Load Namaz Tracker (without pre-checking)
-        let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        let tableBody = document.getElementById("namaz-table");
-        loadNamazTracker();
-
-        // Add event listeners to save data only after user interaction
-        document.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(input => {
-            input.addEventListener("change", saveAllData);
-        });
-        document.querySelectorAll("textarea").forEach(textarea => {
-            textarea.addEventListener("input", saveAllData);
-        });
-
-        // Load survey data only if explicitly saved previously
-        if (localStorage.getItem("surveyData")) {
-            loadSurveyData();
-        }
-    });
-
-    // Function to load Namaz Tracker (no pre-checking on first load)
-    function loadNamazTracker() {
-        let savedData = JSON.parse(localStorage.getItem("namazTracker")) || {};
-        let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        let tableBody = document.getElementById("namaz-table");
-        tableBody.innerHTML = "";
-
-        for (let i = 1; i <= daysInMonth; i++) {
-            let formattedDate = `${String(i).padStart(2, '0')}-${String(currentMonth + 1).padStart(2, '0')}-${currentYear}`;
-            let row = `<tr>
-                <td><strong>${formattedDate}</strong></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Fajr" ${savedData[formattedDate]?.Fajr ? "checked" : ""}></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Dhuhr" ${savedData[formattedDate]?.Dhuhr ? "checked" : ""}></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Asr" ${savedData[formattedDate]?.Asr ? "checked" : ""}></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Maghrib" ${savedData[formattedDate]?.Maghrib ? "checked" : ""}></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Isha" ${savedData[formattedDate]?.Isha ? "checked" : ""}></td>
-            </tr>`;
-            tableBody.innerHTML += row;
-        }
-    }
-
-    // Function to save Namaz Tracker
-    function saveNamazTracker() {
-        let trackerData = {};
-        document.querySelectorAll("#namaz-table input[type='checkbox']").forEach(checkbox => {
-            let date = checkbox.getAttribute("data-date");
-            let namaz = checkbox.getAttribute("data-namaz");
-            if (!trackerData[date]) {
-                trackerData[date] = {};
-            }
-            trackerData[date][namaz] = checkbox.checke;
-        });
-        localStorage.setItem("namazTracker", JSON.stringify(trackerData));
-    }
-
-    // Function to load Survey Form data (only if previously saved)
-    function loadSurveyData() {
-        let savedData = JSON.parse(localStorage.getItem("surveyData")) || {};
-
-        // Load checkboxes and radio buttons
-        document.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(input => {
-            let name = input.getAttribute("name");
-            let value = input.getAttribute("value");
-            if (savedData[name] && savedData[name].includes(value)) {
-                input.checked = true;
-            }
-        });
-
-        // Load textarea
-        document.querySelectorAll("textarea").forEach(textarea => {
-            let name = textarea.getAttribute("name");
-            if (savedData[name]) {
-                textarea.value = savedData[name][0];
-            }
-        });
-    }
-
-    // Function to save all data (Namaz Tracker + Survey Form)
-    function saveAllData() {
-        // Save Namaz Tracker
-        saveNamazTracker();
-
-        // Save Survey Form
-        let surveyData = {};
-        document.querySelectorAll("input[type='checkbox']:checked, input[type='radio']:check").forEach(input => {
-            let name = input.getAttribute("name");
-            let value = input.getAttribute("value");
-            if (!surveyData[name]) {
-                surveyData[name] = [];
-            }
-            surveyData[name].push(value);
-        });
-
-        // Save textarea
-        document.querySelectorAll("textarea").forEach(textarea => {
-            let name = textarea.getAttribute("name");
-            if (textarea.value) {
-                surveyData[name] = [textarea.value];
-            }
-        });
-
-        localStorage.setItem("surveyData", JSON.stringify(surveyData));
-    }
-
-    // Screenshot functionality with improved quality
-    function captureScreenshot() {
-        html2canvas(document.body, {
-            scale: 2, // Increase resolution (2x default)
-            dpi: 300, // Higher DPI for better quality
-            useCORS: true, // Enable CORS for external images
-            logging: false, // Disable logging
-            backgroundColor: '#f0f4f8', // Match body background
-        }).then(canvas => {
-            let image = canvas.toDataURL("image/png", 1.0); // Maximum quality
-            localStorage.setItem("screenshot", image); // Save to localStorage
-            let link = document.createElement("a");
-            link.href = image;
-            link.download = "screenshot.png";
-            link.click();
-        }).catch(error => {
-            console.error("Screenshot capture failed:", error);
-        });
-    }
-</script> -->
-
-
-<!-- <script>
-    let today = new Date();
-    let currentMonth = today.getMonth();
-    let currentYear = today.getFullYear();
-    let monthNames = ["جنوری", "فروری", "مارچ", "اپریل", "مئی", "جون", "جولائی", "اگست", "ستمبر", "اکتوبر", "نومبر", "دسمبر"];
-
-    document.addEventListener("DOMContentLoaded", function () {
-        let monthYearElement = document.getElementById("month-year");
-        if (monthYearElement) {
-            monthYearElement.innerText = `${monthNames[currentMonth]} ${currentYear}`;
-        }
-
-        // Load Namaz Tracker (without pre-checking)
-        let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        let tableBody = document.getElementById("namaz-table");
-        loadNamazTracker();
-
-        // Add event listeners to save data only after user interaction
-        document.querySelectorAll("input[type='checkbox']").forEach(input => {
-            input.addEventListener("change", saveNamazTracker);  // Only save data for the specific checkbox
-        });
-
-        document.querySelectorAll("textarea").forEach(textarea => {
-            textarea.addEventListener("input", saveAllData);
-        });
-
-        // Load survey data only if explicitly saved previously
-        if (localStorage.getItem("surveyData")) {
-            loadSurveyData();
-        }
-    });
-
-    // Function to load Namaz Tracker (no pre-checking on first load)
-    function loadNamazTracker() {
-        let savedData = JSON.parse(localStorage.getItem("namazTracker")) || {};
-        let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        let tableBody = document.getElementById("namaz-table");
-        tableBody.innerHTML = ""; // Reset the table body before appending new rows
-
-        for (let i = 1; i <= daysInMonth; i++) {
-            let formattedDate = `${String(i).padStart(2, '0')}-${String(currentMonth + 1).padStart(2, '0')}-${currentYear}`;
-            
-            // Fetch the saved data or set default as false if not available
-            let fajrChecked = savedData[formattedDate]?.Fajr || false;
-            let dhuhrChecked = savedData[formattedDate]?.Dhuhr || false;
-            let asrChecked = savedData[formattedDate]?.Asr || false;
-            let maghribChecked = savedData[formattedDate]?.Maghrib || false;
-            let ishaChecked = savedData[formattedDate]?.Isha || false;
-
-            let row = `<tr>
-                <td><strong>${formattedDate}</strong></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Fajr" ${fajrChecked ? "checked" : ""}></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Dhuhr" ${dhuhrChecked ? "checked" : ""}></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Asr" ${asrChecked ? "checked" : ""}></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Maghrib" ${maghribChecked ? "checked" : ""}></td>
-                <td><input type="checkbox" data-date="${formattedDate}" data-namaz="Isha" ${ishaChecked ? "checked" : ""}></td>
-            </tr>`;
-            tableBody.innerHTML += row;
-        }
-    }
-
-    // Function to save Namaz Tracker
-    function saveNamazTracker() {
-        let trackerData = {};
-        document.querySelectorAll("#namaz-table input[type='checkbox']").forEach(checkbox => {
-            let date = checkbox.getAttribute("data-date");
-            let namaz = checkbox.getAttribute("data-namaz");
-            if (!trackerData[date]) {
-                trackerData[date] = {};
-            }
-            trackerData[date][namaz] = checkbox.checked;  // Properly use checkbox.checked
-        });
-        localStorage.setItem("namazTracker", JSON.stringify(trackerData));
-    }
-
-    // Function to load Survey Form data (only if previously saved)
-    function loadSurveyData() {
-        let savedData = JSON.parse(localStorage.getItem("surveyData")) || {};
-
-        // Load checkboxes and radio buttons
-        document.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(input => {
-            let name = input.getAttribute("name");
-            let value = input.getAttribute("value");
-            if (savedData[name] && savedData[name].includes(value)) {
-                input.checked = true;
-            }
-        });
-
-        // Load textarea
-        document.querySelectorAll("textarea").forEach(textarea => {
-            let name = textarea.getAttribute("name");
-            if (savedData[name]) {
-                textarea.value = savedData[name][0];
-            }
-        });
-    }
-
-    // Function to save all data (Namaz Tracker + Survey Form)
-    function saveAllData() {
-        // Save Namaz Tracker
-        saveNamazTracker();
-
-        // Save Survey Form
-        let surveyData = {};
-        document.querySelectorAll("input[type='checkbox']:checked, input[type='radio']:checked").forEach(input => {
-            let name = input.getAttribute("name");
-            let value = input.getAttribute("value");
-            if (!surveyData[name]) {
-                surveyData[name] = [];
-            }
-            surveyData[name].push(value);
-        });
-
-        // Save textarea
-        document.querySelectorAll("textarea").forEach(textarea => {
-            let name = textarea.getAttribute("name");
-            if (textarea.value) {
-                surveyData[name] = [textarea.value];
-            }
-        });
-
-        localStorage.setItem("surveyData", JSON.stringify(surveyData));
-    }
-
-    // Screenshot functionality with improved quality
-    function captureScreenshot() {
-        html2canvas(document.body, {
-            scale: 2, // Increase resolution (2x default)
-            dpi: 300, // Higher DPI for better quality
-            useCORS: true, // Enable CORS for external images
-            logging: false, // Disable logging
-            backgroundColor: '#f0f4f8', // Match body background
-        }).then(canvas => {
-            let image = canvas.toDataURL("image/png", 1.0); // Maximum quality
-            localStorage.setItem("screenshot", image); // Save to localStorage
-            let link = document.createElement("a");
-            link.href = image;
-            link.download = "screenshot.png";
-            link.click();
-        }).catch(error => {
-            console.error("Screenshot capture failed:", error);
-        });
-    }
-</script> -->
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -1177,25 +795,38 @@ function captureScreenshot() {
     }
     
 
-    function captureScreenshot() {
-        html2canvas(document.body, {
-            scale: 2,
-            dpi: 300,
-            useCORS: true,
-            logging: false,
-            backgroundColor: '#f0f4f8',
-        }).then(canvas => {
-            let image = canvas.toDataURL("image/png", 1.0);
-            localStorage.setItem("screenshot", image);
-            let link = document.createElement("a");
-            link.href = image;
-            link.download = "screenshot.png";
-            link.click();
-        }).catch(error => {
-            console.error("Screenshot capture failed:", error);
-        });
-    }
+   
+  
+
+
+    
+document.getElementById('captureForm').addEventListener('click', function () {
+    const form = document.getElementById('surveyForm');
+    html2canvas(form).then(function (canvas) {
+        const link = document.createElement('a');
+        link.download = 'survey-form.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    });
+});
+
+document.getElementById('captureTracker').addEventListener('click', function () {
+    const tracker = document.getElementById('screenshot');
+    html2canvas(tracker).then(function (canvas) {
+        const link = document.createElement('a');
+        link.download = 'namaz-tracker.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    });
+});
+
+
+
+
 </script>
+
+
+
 
 <!-- Required Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
